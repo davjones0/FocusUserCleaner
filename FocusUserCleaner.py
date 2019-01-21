@@ -21,7 +21,9 @@ def main():
     engine._build_search_terms(choices)
     engine.login()
     engine.begin_cleaning(choices)
-
+    
+    # little something to stop the app from closing
+    closer = input()
 
 if __name__ == "__main__":
     main()

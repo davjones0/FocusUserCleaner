@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from pprint import pprint
-from questions import loginFailQuestion, retryLogin
+from questions import loginFailQuestion, retryLogin, confirmQuestion
 from progress.bar import Bar
 import csv
 import time
@@ -74,9 +74,12 @@ class Engine(object):
         searchBar = searchBar.find_element_by_xpath('.//input')
         
         delete_from = self.fetch_delete_links(searchPatterns, searchBar)
-        pprint(delete_from)
         # prompt for delete
-        #self._do_it(delete_from)
+        do_it = confirmQuestion()
+        if do_it['confirmation']:
+            self._do_it(delete_from)
+        else:
+            exit()
 
 
     # gathers all the urls for deleting users takes an array of search querys and the input filter element
@@ -118,10 +121,11 @@ class Engine(object):
         self._driver.implicitly_wait(2)
         for target in lst:
             self._driver.get(target)
-            the_button = self._driver.find_element_by_class_name('btn btn-default')
+            the_button = self._driver.find_element_by_class_name('btn.btn-default')
             the_button.click()
             bar.next()
         bar.finish()
+        print('Done removed {} users'.format(len(lst)))
             
 
 
